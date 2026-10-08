@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f4ef">
+  <title>서포트 물량 현황</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    :root{color-scheme:light;--paper:#f3f4ef;--white:#fff;--ink:#202722;--muted:#737b73;--line:#dfe3db;--green:#176b52;--green-soft:#e5f1e9;--orange:#d96d45;--orange-soft:#fbede5;--yellow:#e7b840;--blue:#7296a8;--shadow:0 1px 2px #2027220d,0 8px 24px #20272208}
+    *{box-sizing:border-box}body{margin:0;background-color:var(--paper);background-image:linear-gradient(#e7eae333 1px,transparent 1px),linear-gradient(90deg,#e7eae333 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:Manrope,"Noto Sans KR",sans-serif;font-size:14px}button,input,select{font:inherit}button,select{color:inherit}.shell{max-width:1480px;margin:0 auto;padding:30px 34px 48px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:1px solid var(--line);padding:0 0 20px}.brandline{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;width:38px;height:38px;background:var(--green);color:#fff;font:500 14px "DM Mono",monospace;letter-spacing:0}.eyebrow{font:500 10px "DM Mono",monospace;letter-spacing:1.1px;color:var(--green);text-transform:uppercase}.heading{margin:4px 0 0;font-size:21px;font-weight:800;letter-spacing:0}.head-actions{display:flex;align-items:center;gap:12px}.source{font-size:12px;color:var(--muted)}.upload{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;font-size:12px;font-weight:700;transition:background .15s}.upload:hover{background:var(--green);border-color:var(--green)}.upload input{display:none}.intro{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:25px 0 17px}.intro h2{margin:0;font-size:19px;font-weight:800;letter-spacing:0}.intro p{margin:5px 0 0;color:var(--muted);font-size:12px}.snapshot{color:var(--muted);font-size:11px}.snapshot strong{color:var(--ink);font-family:"DM Mono",monospace;font-weight:500}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.kpi{position:relative;min-height:112px;padding:16px 18px;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.kpi:before{position:absolute;inset:0 auto 0 0;width:3px;background:var(--green);content:""}.kpi:nth-child(2):before{background:var(--orange)}.kpi:nth-child(3):before{background:var(--yellow)}.kpi:nth-child(4):before{background:var(--blue)}.kpi-label{font-size:11px;color:var(--muted);font-weight:600}.kpi-value{margin-top:10px;font:500 27px "DM Mono","Noto Sans KR",monospace;letter-spacing:0;font-variant-numeric:tabular-nums}.kpi-foot{margin-top:5px;color:var(--muted);font-size:11px}.positive{color:var(--green)}.warning{color:var(--orange)}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr);gap:14px;margin-top:14px}.panel{min-width:0;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow)}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:16px 18px 10px}.panel-title{margin:0;font-size:13px;font-weight:800}.panel-sub{margin:4px 0 0;font-size:11px;color:var(--muted)}.chart-wrap{height:260px;padding:7px 16px 16px}.chart-wrap.compact{height:260px}.filterbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}.control{height:35px;min-width:145px;padding:0 10px;border:1px solid var(--line);background:#fff;border-radius:0;font-size:12px}.control:focus{outline:2px solid #176b5233;border-color:var(--green)}.search{flex:1;min-width:180px}.result-count{margin-left:auto;color:var(--muted);font-size:11px;font-family:"DM Mono",monospace}.table-shell{overflow:auto;max-height:490px}.data-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}.data-table th{position:sticky;top:0;z-index:1;padding:10px 12px;background:#f7f8f5;color:var(--muted);font-size:10px;font-weight:700;text-align:left;border-bottom:1px solid var(--line)}.data-table td{padding:9px 12px;border-bottom:1px solid #edf0ea}.data-table tbody tr:hover{background:#f6f8f5}.data-table .num{text-align:right;font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}.tag{display:inline-block;padding:3px 7px;background:var(--green-soft);color:var(--green);font-size:10px;font-weight:700}.empty{padding:40px 16px;text-align:center;color:var(--muted)}.table-footer{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;color:var(--muted);font-size:11px}.pager{display:flex;gap:6px}.pager button{width:30px;height:28px;border:1px solid var(--line);background:#fff;cursor:pointer}.pager button:disabled{opacity:.4;cursor:default}.status{min-height:18px;margin-top:10px;color:var(--muted);font-size:11px}.status.error{color:#a33d29}.footnote{padding-top:13px;color:var(--muted);font-size:10px;line-height:1.6}.mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}
+    .uninstalled-totals{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.uninstalled-total{display:grid;gap:2px;color:var(--muted);font-size:10px}.uninstalled-total strong{color:var(--ink);font:500 21px "DM Mono",monospace;font-variant-numeric:tabular-nums}.uninstalled-total.excluded strong{color:var(--green)}
+    @media(max-width:900px){.shell{padding:22px 20px 36px}.dashboard-grid{grid-template-columns:1fr}.chart-wrap,.chart-wrap.compact{height:240px}}
+    @media(max-width:620px){.shell{padding:16px 12px 26px}.masthead{align-items:flex-start}.head-actions{align-items:flex-end;flex-direction:column-reverse;gap:6px}.source{max-width:160px;text-align:right;font-size:10px}.heading{font-size:17px}.intro{align-items:flex-start;flex-direction:column;gap:8px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{min-height:100px;padding:13px}.kpi-value{font-size:22px}.dashboard-grid{gap:10px;margin-top:10px}.panel-head{padding:14px 13px 8px}.filterbar{padding:11px;gap:7px}.control{min-width:calc(50% - 4px);flex:1}.search{min-width:100%;order:3}.result-count{margin:2px 0 0 auto}.chart-wrap,.chart-wrap.compact{height:220px;padding:6px 8px 12px}.table-footer{padding:9px 10px}}
+    .upload:disabled{opacity:.45;cursor:not-allowed}
+    .result-actions{display:flex;align-items:center;gap:8px;margin-left:auto}.export-results{height:35px;padding:0 11px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}.export-results:hover{background:var(--green-soft)}.export-results:disabled{opacity:.45;cursor:not-allowed}
+    @media(max-width:620px){.data-table th{position:static}.result-actions{order:4}.result-count{margin-left:0}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div class="brandline"><div class="mark">S/</div><div><div class="eyebrow">FIELD OPERATIONS / QUANTITY</div><h1 class="heading">SUPPORT CONTROL</h1></div></div>
+      <div class="head-actions"><span class="source" id="sourceName">엑셀 파일을 불러오는 중</span><button class="upload" id="exportButton" type="button" disabled>엑셀 저장</button><label class="upload">엑셀 바꾸기<input id="fileInput" type="file" accept=".xlsx,.xls"></label></div>
+    </header>
+    <section class="intro"><div><h2>서포트 물량 현황</h2><p>설치 · 용접 진행률과 상세 물량을 한 화면에서 확인합니다.</p></div><div class="snapshot">요약 기준 <strong id="snapshotDate">-</strong></div></section>
+    <section class="kpis" aria-label="주요 지표">
+      <article class="kpi"><div class="kpi-label" id="kpi1Label">전체 물량</div><div class="kpi-value" id="kpi1">-</div><div class="kpi-foot" id="kpi1Foot">상세 행 기준</div></article>
+      <article class="kpi"><div class="kpi-label" id="kpi2Label">설치 완료</div><div class="kpi-value" id="kpi2">-</div><div class="kpi-foot" id="kpi2Foot">-</div></article>
+      <article class="kpi"><div class="kpi-label" id="kpi3Label">용접 완료</div><div class="kpi-value" id="kpi3">-</div><div class="kpi-foot" id="kpi3Foot">-</div></article>
+      <article class="kpi"><div class="kpi-label" id="kpi4Label">총 중량</div><div class="kpi-value" id="kpi4">-</div><div class="kpi-foot" id="kpi4Foot">KG</div></article>
+    </section>
+    <section class="dashboard-grid" aria-label="물량 차트">
+      <article class="panel"><div class="panel-head"><div><h3 class="panel-title">구분별 설치 · 용접 현황</h3><p class="panel-sub">원본 요약 시트 기준 수량</p></div></div><div class="chart-wrap"><canvas id="categoryChart" aria-label="구분별 설치와 용접 현황"></canvas></div></article>
+      <article class="panel"><div class="panel-head"><div><h3 class="panel-title">Area별 물량 상위</h3><p class="panel-sub">상세 시트 레코드 수 기준</p></div></div><div class="chart-wrap compact"><canvas id="areaChart" aria-label="Area별 물량 상위"></canvas></div></article>
+    </section>
+    <section class="panel" style="margin-top:14px" aria-label="상세 물량 목록">
+      <div class="panel-head"><div><h3 class="panel-title">상세 물량</h3><p class="panel-sub">구분과 Area를 선택하거나 행의 모든 값을 검색하세요.</p></div></div>
+      <div class="filterbar"><select class="control" id="categoryFilter" aria-label="구분 필터"><option value="">전체 구분</option></select><select class="control" id="areaFilter" aria-label="Area 필터"><option value="">전체 Area</option></select><input class="control search" id="searchInput" type="search" placeholder="SERIAL, MAT TYPE1, ISO NO 검색"><div class="result-actions"><span class="result-count" id="resultCount">0건</span><button class="export-results" id="exportResultsButton" type="button" disabled>검색 결과 엑셀 저장</button></div></div>
+      <div class="table-shell"><table class="data-table"><thead><tr><th>SERIAL</th><th>Area</th><th>ISO NO</th><th>구분</th><th>MAT TYPE1</th><th>Joint</th><th>Fit-up Date</th><th>Welding Date</th><th>POSITION</th></tr></thead><tbody id="tableBody"></tbody></table><div class="empty" id="emptyState" hidden>표시할 데이터가 없습니다.</div></div>
+      <div class="table-footer"><span id="pageSummary">-</span><div class="pager"><button id="prevPage" type="button" aria-label="이전 페이지">‹</button><button id="nextPage" type="button" aria-label="다음 페이지">›</button></div></div>
+    </section>
+    <section class="panel uninstalled-panel" aria-label="미설치 물량">
+      <div class="panel-head uninstalled-head"><div><h3 class="panel-title">미설치 물량</h3><p class="panel-sub">원본 요약 시트 기준 · 미설치 수량이 있는 구분</p></div><div class="uninstalled-totals"><div class="uninstalled-total"><span>미설치</span><strong id="uninstalledTotal">-</strong></div><div class="uninstalled-total"><span>작업대기</span><strong id="workWaitTotal">-</strong></div><div class="uninstalled-total excluded"><span>작업대기 제외 미설치</span><strong id="uninstalledAdjustedTotal">-</strong></div></div></div>
+      <div class="table-shell"><table class="data-table"><thead><tr><th>구분</th><th class="num">전체 물량</th><th class="num">설치 완료</th><th class="num">미설치</th><th class="num">작업대기</th><th class="num">작업대기 제외 미설치</th><th class="num">설치율</th></tr></thead><tbody id="uninstalledBody"></tbody><tfoot id="uninstalledFoot"></tfoot></table><div class="empty" id="uninstalledEmpty" hidden>요약 시트에서 미설치 집계를 찾을 수 없습니다.</div></div>
+    </section>
+    <div class="status" id="status" role="status"></div>
+    <footer class="footnote">설치·용접 집계는 워크북의 요약 시트 값을 사용합니다. 필터 적용 시 날짜 입력 건수로 표시되며 설치 수량 집계와는 다를 수 있습니다.</footer>
+  </main>
+<script>
+(() => {
+  const pageSize = 50;
+  const state = { records: [], categories: [], summary: null, filename: '', page: 0, categoryChart: null, areaChart: null };
+  const byId = (id) => document.getElementById(id);
+  const format = (value) => Number(value || 0).toLocaleString('ko-KR');
+  const text = (value) => value == null ? '' : String(value).trim();
+  const numeric = (value) => {
+    if (typeof value === 'number') return value;
+    const parsed = Number(String(value ?? '').replace(/,/g, '').trim());
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+  const dateText = (value) => {
+    if (typeof value === 'number' && typeof XLSX !== 'undefined') {
+      const parsed = XLSX.SSF.parse_date_code(value);
+      if (parsed) return `${parsed.y}-${String(parsed.m).padStart(2, '0')}-${String(parsed.d).padStart(2, '0')}`;
+    }
+    if (value instanceof Date && !Number.isNaN(value.valueOf())) return `${value.getUTCFullYear()}-${String(value.getUTCMonth() + 1).padStart(2, '0')}-${String(value.getUTCDate()).padStart(2, '0')}`;
+    return text(value);
+  };
+  const latestDate = (value) => {
+    const values = Array.isArray(value) || typeof value === 'number' || value instanceof Date
+      ? (Array.isArray(value) ? value : [value])
+      : text(value).split(/[,;\n]+/);
+    return values.map(dateText).filter(Boolean).reduce((latest, candidate) => {
+      const candidateTime = Date.parse(candidate);
+      const latestTime = Date.parse(latest);
+      return !latest || (Number.isFinite(candidateTime) && (!Number.isFinite(latestTime) || candidateTime > latestTime)) ? candidate : latest;
+    }, '');
+  };
+  const setStatus = (message, error = false) => {
+    byId('status').textContent = message;
+    byId('status').classList.toggle('error', error);
+  };
+  const cell = (row, index) => row?.[index] ?? '';
+
+  function normalizeRecord(row) {
+    return {
+      serial: text(cell(row, 0)), area: text(cell(row, 1)),
+      iso: text(cell(row, 4)), group: text(cell(row, 8)), matType: text(cell(row, 13)), position: text(cell(row, 14)), joint: text(cell(row, 9)),
+      fitup: latestDate(cell(row, 10)), welding: dateText(cell(row, 11)), workWait: text(cell(row, 16)) === '작업대기',
+      weight: numeric(cell(row, 19)), all: row.map(text).join(' ').toLocaleLowerCase('ko-KR')
+    };
+  }
+
+  function parseWorkbook(workbook, filename) {
+    const detailSheet = workbook.Sheets['서포트'] || workbook.Sheets[workbook.SheetNames[0]];
+    if (!detailSheet) throw new Error('읽을 수 있는 시트가 없습니다.');
+    const detailRows = XLSX.utils.sheet_to_json(detailSheet, { header: 1, raw: true, defval: '' });
+    state.records = detailRows.slice(1).map(normalizeRecord).filter((record) => record.serial);
+    const reportSheet = workbook.Sheets['Sheet2'] || workbook.Sheets[workbook.SheetNames[1]];
+    const reportRows = reportSheet ? XLSX.utils.sheet_to_json(reportSheet, { header: 1, raw: true, defval: '' }) : [];
+    const totalRow = reportRows.find((row) => text(row[0]).toUpperCase() === 'TOTAL');
+    state.categories = reportRows.filter((row) => text(row[0]) && text(row[0]).toUpperCase() !== 'TOTAL' && Number.isFinite(numeric(row[1])) && numeric(row[1]) > 0)
+      .map((row) => {
+        const name = text(row[0]);
+        const workWait = state.records.filter((record) => record.group === name && record.workWait).length;
+        return { name, total: numeric(row[1]), installed: numeric(row[2]), notInstalled: numeric(row[3]), workWait, notInstalledExcludingWait: Math.max(0, numeric(row[3]) - workWait), welded: numeric(row[4]), notWelded: numeric(row[5]) };
+      });
+    const workWaitTotal = state.records.filter((record) => record.workWait).length;
+    state.summary = totalRow ? { total: numeric(totalRow[1]), installed: numeric(totalRow[2]), notInstalled: numeric(totalRow[3]), workWait: workWaitTotal, notInstalledExcludingWait: Math.max(0, numeric(totalRow[3]) - workWaitTotal), welded: numeric(totalRow[4]), notWelded: numeric(totalRow[5]), title: text(reportRows[0]?.[0]) } : null;
+    state.filename = filename;
+    byId('exportButton').disabled = false;
+    byId('sourceName').textContent = filename;
+    byId('snapshotDate').textContent = state.summary?.title.match(/\d{2}-\d{2}/)?.[0] || '상세 데이터';
+    state.page = 0;
+    populateFilters();
+    render();
+    setStatus(`${format(state.records.length)}개 상세 레코드를 불러왔습니다.`);
+  }
+
+  function populateFilters() {
+    const categorySelect = byId('categoryFilter');
+    const areaSelect = byId('areaFilter');
+    const selectedCategory = categorySelect.value;
+    const selectedArea = areaSelect.value;
+    categorySelect.replaceChildren(new Option('전체 구분', ''));
+    areaSelect.replaceChildren(new Option('전체 Area', ''));
+    const groups = [...new Set(state.records.map((record) => record.group).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko'));
+    const areas = [...new Set(state.records.map((record) => record.area).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ko'));
+    groups.forEach((value) => categorySelect.add(new Option(value, value)));
+    areas.forEach((value) => areaSelect.add(new Option(value, value)));
+    if (groups.includes(selectedCategory)) categorySelect.value = selectedCategory;
+    if (areas.includes(selectedArea)) areaSelect.value = selectedArea;
+  }
+
+  function filteredRecords() {
+    const category = byId('categoryFilter').value;
+    const area = byId('areaFilter').value;
+    const query = byId('searchInput').value.trim().toLocaleLowerCase('ko-KR');
+    return state.records.filter((record) => (!category || record.group === category) && (!area || record.area === area) && (!query || record.all.includes(query)));
+  }
+
+  function exportWorkbook() {
+    if (typeof XLSX === 'undefined') { setStatus('엑셀 저장 라이브러리를 불러오지 못했습니다.', true); return; }
+    const records = filteredRecords();
+    const details = [
+      ['SERIAL', 'Area', 'ISO NO', '구분', 'MAT TYPE1', 'Joint', 'FIT-UP DATE', 'WELDING DATE', 'POSITION'],
+      ...records.map((record) => [record.serial, record.area, record.iso, record.group, record.matType, record.joint, record.fitup, record.welding, record.position])
+    ];
+    const categories = state.categories.filter((category) => category.notInstalled > 0).sort((a, b) => b.notInstalled - a.notInstalled);
+    const uninstalled = [
+      ['구분', '전체 물량', '설치 완료', '미설치', '작업대기', '작업대기 제외 미설치', '설치율'],
+      ...categories.map((category) => [category.name, category.total, category.installed, category.notInstalled, category.workWait, category.notInstalledExcludingWait, category.total ? `${(category.installed / category.total * 100).toFixed(1)}%` : '-'])
+    ];
+    if (state.summary) uninstalled.push(['TOTAL', state.summary.total, state.summary.installed, state.summary.notInstalled, state.summary.workWait, state.summary.notInstalledExcludingWait, `${(state.summary.installed / state.summary.total * 100).toFixed(1)}%`]);
+    const summary = [
+      ['항목', '값'],
+      ['요약 기준', state.summary?.title || '-'],
+      ['적용 구분 필터', byId('categoryFilter').value || '전체'],
+      ['적용 Area 필터', byId('areaFilter').value || '전체'],
+      ['검색어', byId('searchInput').value.trim() || '-'],
+      ['필터 상세 건수', records.length],
+      ['전체 물량 (요약)', state.summary?.total ?? state.records.length],
+      ['설치 완료 (요약)', state.summary?.installed ?? '-'],
+      ['미설치 물량 (요약)', state.summary?.notInstalled ?? '-'],
+      ['작업대기', state.summary?.workWait ?? '-'],
+      ['작업대기 제외 미설치', state.summary?.notInstalledExcludingWait ?? '-'],
+      ['용접 완료 (요약)', state.summary?.welded ?? '-'],
+      ['미용접 물량 (요약)', state.summary?.notWelded ?? '-'],
+      ['필터 상세 중량 (KG)', records.reduce((total, record) => total + record.weight, 0)]
+    ];
+    const workbook = XLSX.utils.book_new();
+    const summarySheet = XLSX.utils.aoa_to_sheet(summary);
+    summarySheet['!cols'] = [{ wch: 24 }, { wch: 30 }];
+    const detailSheet = XLSX.utils.aoa_to_sheet(details);
+    detailSheet['!cols'] = [18, 14, 42, 18, 24, 12, 14, 14, 16].map((wch) => ({ wch }));
+    const uninstalledSheet = XLSX.utils.aoa_to_sheet(uninstalled);
+    uninstalledSheet['!cols'] = [20, 14, 14, 14, 14, 24, 12].map((wch) => ({ wch }));
+    XLSX.utils.book_append_sheet(workbook, summarySheet, '요약');
+    XLSX.utils.book_append_sheet(workbook, detailSheet, '상세 물량');
+    XLSX.utils.book_append_sheet(workbook, uninstalledSheet, '미설치 물량');
+    const baseName = state.filename.replace(/\.[^.]+$/, '') || 'support';
+    XLSX.writeFile(workbook, `${baseName}_대시보드_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    setStatus(`${format(records.length)}개 상세 행을 엑셀로 저장했습니다.`);
+  }
+
+  function exportSearchResults() {
+    if (typeof XLSX === 'undefined') { setStatus('엑셀 저장 라이브러리를 불러오지 못했습니다.', true); return; }
+    const records = filteredRecords();
+    if (!records.length) return;
+    const rows = [
+      ['SERIAL', 'Area', 'ISO NO', '구분', 'MAT TYPE1', 'Joint', 'FIT-UP DATE', 'WELDING DATE', 'POSITION'],
+      ...records.map((record) => [record.serial, record.area, record.iso, record.group, record.matType, record.joint, record.fitup, record.welding, record.position])
+    ];
+    const workbook = XLSX.utils.book_new();
+    const sheet = XLSX.utils.aoa_to_sheet(rows);
+    sheet['!cols'] = [18, 14, 42, 18, 24, 12, 14, 14, 16].map((wch) => ({ wch }));
+    XLSX.utils.book_append_sheet(workbook, sheet, '검색 결과');
+    const baseName = state.filename.replace(/\.[^.]+$/, '') || 'support';
+    XLSX.writeFile(workbook, `${baseName}_검색결과_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    setStatus(`검색 결과 ${format(records.length)}개 행을 엑셀로 저장했습니다.`);
+  }
+
+  function renderKpis(records, filtered) {
+    const weight = records.reduce((sum, record) => sum + record.weight, 0);
+    byId('kpi1').textContent = format(records.length);
+    byId('kpi4').textContent = format(Math.round(weight));
+    if (!filtered && state.summary) {
+      const summary = state.summary;
+      byId('kpi1Label').textContent = '전체 물량';
+      byId('kpi1Foot').textContent = '상세 레코드 기준';
+      byId('kpi2Label').textContent = '설치 완료';
+      byId('kpi2').textContent = format(summary.installed);
+      byId('kpi2Foot').innerHTML = `<span class="positive">${format(summary.installed)} 완료</span> · 미설치 ${format(summary.notInstalled)}`;
+      byId('kpi3Label').textContent = '용접 완료';
+      byId('kpi3').textContent = format(summary.welded);
+      byId('kpi3Foot').innerHTML = `<span class="positive">${format(summary.welded)} 완료</span> · 미용접 ${format(summary.notWelded)}`;
+    } else {
+      const fitup = records.filter((record) => record.fitup).length;
+      const welding = records.filter((record) => record.welding).length;
+      byId('kpi1Label').textContent = '필터 물량';
+      byId('kpi1Foot').textContent = `전체 ${format(state.records.length)}건 중`;
+      byId('kpi2Label').textContent = 'Fit-up Date 입력';
+      byId('kpi2').textContent = format(fitup);
+      byId('kpi2Foot').textContent = '선택한 상세 행 기준';
+      byId('kpi3Label').textContent = 'Welding Date 입력';
+      byId('kpi3').textContent = format(welding);
+      byId('kpi3Foot').textContent = '선택한 상세 행 기준';
+    }
+  }
+
+  function drawCharts() {
+    if (typeof Chart === 'undefined') { setStatus('차트 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.', true); return; }
+    if (state.categoryChart) state.categoryChart.destroy();
+    if (state.areaChart) state.areaChart.destroy();
+    const categories = state.categories;
+    const base = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 9, boxHeight: 9, usePointStyle: true, pointStyle: 'rect', padding: 16, color: '#59635c', font: { family: 'Manrope, Noto Sans KR, sans-serif', size: 10 } } }, tooltip: { callbacks: { label: (context) => `${context.dataset.label}: ${format(context.raw)}` } } }, scales: { x: { stacked: true, grid: { display: false }, ticks: { color: '#737b73', font: { size: 9 } }, border: { display: false } }, y: { stacked: true, grid: { color: '#edf0ea' }, ticks: { color: '#737b73', font: { size: 10 }, callback: (value) => format(value) }, border: { display: false } } } };
+    state.categoryChart = new Chart(byId('categoryChart'), { type: 'bar', data: { labels: categories.map((item) => item.name), datasets: [{ label: '설치', data: categories.map((item) => item.installed), backgroundColor: '#176b52', borderRadius: 2, stack: 'installation' }, { label: '미설치', data: categories.map((item) => item.notInstalled), backgroundColor: '#e7b840', borderRadius: 2, stack: 'installation' }, { label: '용접', data: categories.map((item) => item.welded), backgroundColor: '#7296a8', borderRadius: 2, stack: 'welding' }, { label: '미용접', data: categories.map((item) => item.notWelded), backgroundColor: '#d96d45', borderRadius: 2, stack: 'welding' }] }, options: { ...base, interaction: { mode: 'index', intersect: false } } });
+    const counts = new Map();
+    state.records.forEach((record) => counts.set(record.area || '(미지정)', (counts.get(record.area || '(미지정)') || 0) + 1));
+    const topAreas = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).reverse();
+    state.areaChart = new Chart(byId('areaChart'), { type: 'bar', data: { labels: topAreas.map(([area]) => area), datasets: [{ label: '상세 레코드', data: topAreas.map(([, count]) => count), backgroundColor: ['#176b52','#d96d45','#7296a8','#e7b840','#527f68','#c8805f','#93aa8d','#b0a05e'].slice(0, topAreas.length), borderRadius: 2, barThickness: 16 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => `${format(context.raw)}건` } } }, scales: { x: { grid: { color: '#edf0ea' }, ticks: { color: '#737b73', font: { size: 9 }, callback: (value) => format(value) }, border: { display: false } }, y: { grid: { display: false }, ticks: { color: '#59635c', font: { size: 10 } }, border: { display: false } } } } });
+  }
+
+  function renderTable(records) {
+    const body = byId('tableBody');
+    const start = state.page * pageSize;
+    const visible = records.slice(start, start + pageSize);
+    body.replaceChildren();
+    visible.forEach((record) => {
+      const row = document.createElement('tr');
+      const values = [record.serial, record.area, record.iso, record.group, record.matType, record.joint, record.fitup, record.welding, record.position];
+      values.forEach((value, index) => {
+        const td = document.createElement('td');
+        if (index === 3) { const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = value || '-'; td.append(tag); }
+        else td.textContent = value || '-';
+        row.append(td);
+      });
+      body.append(row);
+    });
+    byId('emptyState').hidden = records.length > 0;
+    byId('resultCount').textContent = `${format(records.length)}건`;
+    byId('pageSummary').textContent = records.length ? `${format(start + 1)}-${format(Math.min(start + pageSize, records.length))} / ${format(records.length)}` : '0건';
+    byId('prevPage').disabled = state.page === 0;
+    byId('nextPage').disabled = start + pageSize >= records.length;
+    byId('exportResultsButton').disabled = records.length === 0;
+  }
+
+  function renderUninstalled() {
+    const body = byId('uninstalledBody');
+    const foot = byId('uninstalledFoot');
+    const categories = state.categories.filter((category) => category.notInstalled > 0).sort((a, b) => b.notInstalled - a.notInstalled);
+    body.replaceChildren();
+    foot.replaceChildren();
+    byId('uninstalledTotal').textContent = format(state.summary?.notInstalled);
+    byId('workWaitTotal').textContent = format(state.summary?.workWait);
+    byId('uninstalledAdjustedTotal').textContent = format(state.summary?.notInstalledExcludingWait);
+    byId('uninstalledEmpty').hidden = categories.length > 0;
+    categories.forEach((category) => {
+      const row = document.createElement('tr');
+      const label = document.createElement('td');
+      label.textContent = category.name;
+      row.append(label);
+      [category.total, category.installed, category.notInstalled, category.workWait, category.notInstalledExcludingWait].forEach((value) => {
+        const td = document.createElement('td');
+        td.className = 'num';
+        td.textContent = format(value);
+        row.append(td);
+      });
+      const rate = document.createElement('td');
+      rate.className = 'num';
+      rate.textContent = category.total ? `${(category.installed / category.total * 100).toFixed(1)}%` : '-';
+      row.append(rate);
+      body.append(row);
+    });
+    if (state.summary) {
+      const row = document.createElement('tr');
+      const label = document.createElement('td');
+      label.textContent = 'TOTAL';
+      row.append(label);
+      [state.summary.total, state.summary.installed, state.summary.notInstalled, state.summary.workWait, state.summary.notInstalledExcludingWait].forEach((value) => {
+        const td = document.createElement('td');
+        td.className = 'num';
+        td.textContent = format(value);
+        row.append(td);
+      });
+      const rate = document.createElement('td');
+      rate.className = 'num';
+      rate.textContent = state.summary.total ? `${(state.summary.installed / state.summary.total * 100).toFixed(1)}%` : '-';
+      row.append(rate);
+      foot.append(row);
+    }
+  }
+
+  function render() {
+    const records = filteredRecords();
+    const filtered = Boolean(byId('categoryFilter').value || byId('areaFilter').value || byId('searchInput').value.trim());
+    const pages = Math.max(1, Math.ceil(records.length / pageSize));
+    state.page = Math.min(state.page, pages - 1);
+    renderKpis(records, filtered);
+    renderTable(records);
+    renderUninstalled();
+    if (!state.categoryChart) drawCharts();
+  }
+
+  async function loadFile(file) {
+    if (!file || typeof XLSX === 'undefined') { setStatus('엑셀 판독기를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.', true); return; }
+    try {
+      setStatus('엑셀 파일을 읽는 중입니다.');
+      const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array', cellDates: false });
+      parseWorkbook(workbook, file.name);
+    } catch (error) {
+      setStatus(`파일을 읽지 못했습니다: ${error.message}`, true);
+    }
+  }
+
+  byId('fileInput').addEventListener('change', (event) => loadFile(event.target.files[0]));
+  byId('exportButton').addEventListener('click', exportWorkbook);
+  byId('exportResultsButton').addEventListener('click', exportSearchResults);
+  [byId('categoryFilter'), byId('areaFilter')].forEach((control) => control.addEventListener('change', () => { state.page = 0; render(); }));
+  byId('searchInput').addEventListener('input', () => { state.page = 0; render(); });
+  byId('prevPage').addEventListener('click', () => { state.page = Math.max(0, state.page - 1); renderTable(filteredRecords()); });
+  byId('nextPage').addEventListener('click', () => { state.page += 1; renderTable(filteredRecords()); });
+
+  fetch(encodeURI('SUPT_물량관리_10-02.xlsx')).then((response) => {
+    if (!response.ok) throw new Error('기본 엑셀 파일을 찾을 수 없습니다.');
+    return response.arrayBuffer();
+  }).then((buffer) => {
+    if (typeof XLSX === 'undefined') throw new Error('엑셀 판독기를 불러오지 못했습니다.');
+    parseWorkbook(XLSX.read(buffer, { type: 'array', cellDates: false }), 'SUPT_물량관리_10-02.xlsx');
+  }).catch(() => {
+    byId('sourceName').textContent = '엑셀 파일 선택 필요';
+    setStatus('기본 파일을 자동으로 열지 못했습니다. 상단에서 엑셀 파일을 선택해 주세요.', true);
+  });
+})();
+</script>
+</body>
+</html>
