@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>현장 자재 관리</title>
+  <style>
+    :root {
+      --bg: #f3f4ef;
+      --panel: #ffffff;
+      --line: #dfe5df;
+      --text: #1f2d2b;
+      --muted: #65736e;
+      --primary: #1d6f62;
+      --primary-soft: #e4f0eb;
+      --accent: #d87c4d;
+      --warning: #d9ac3a;
+      --danger: #b94c3a;
+      --shadow: 0 8px 20px rgba(19, 32, 28, 0.06);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Sans KR", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 28px 18px 52px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 22px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), #123d36);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      line-height: 1.1;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button.primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+    }
+
+    .card:nth-child(2)::before { background: var(--accent); }
+    .card:nth-child(3)::before { background: var(--warning); }
+    .card:nth-child(4)::before { background: #7aa0b4; }
+
+    .label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .value {
+      margin-top: 10px;
+      font-size: clamp(1.6rem, 2vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .foot {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 380px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select,
+    .toolbar input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fbfcfb;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .toolbar input:focus {
+      outline: 2px solid rgba(29, 111, 98, 0.12);
+      border-color: var(--primary);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar .search-box {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .table-shell {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 960px;
+      background: white;
+    }
+
+    th, td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f6f8f5;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      position: sticky;
+      top: 0;
+    }
+
+    tbody tr:hover {
+      background: #f8faf9;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .tag.warning {
+      background: #fbf0d9;
+      color: #a86d08;
+    }
+
+    .tag.danger {
+      background: #fbe8e4;
+      color: var(--danger);
+    }
+
+    .status-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .mini-btn.delete {
+      color: var(--danger);
+      border-color: rgba(185, 76, 58, .25);
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .compact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .compact-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      background: #f8faf9;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .worker-info {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 6px;
+      background: #e9eeea;
+      border-radius: 12px;
+    }
+
+    .admin-tab {
+      flex: 1;
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .admin-tab[aria-selected="true"] {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(19, 32, 28, 0.08);
+    }
+
+    .tab-panel[hidden] {
+      display: none;
+    }
+
+    .request-table {
+      min-width: 680px;
+    }
+
+    .admin-request-table {
+      min-width: 900px;
+    }
+
+    @media (max-width: 980px) {
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .field-grid, .summary-grid { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="adminScreen" class="container" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <small>Field Operations</small>
+          <h1>현장 자재 관리</h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="tag" style="margin-right:8px;">관리자</span>
+        <button class="button" id="logoutBtnAdmin" type="button">로그아웃</button>
+        <button class="button primary" id="resetDemoBtn" type="button">샘플 데이터 불러오기</button>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <article class="card">
+        <div class="label">총 자재</div>
+        <div class="value" id="totalMaterials">0</div>
+        <div class="foot">등록된 자재 건수</div>
+      </article>
+      <article class="card">
+        <div class="label">총 수량</div>
+        <div class="value" id="totalQty">0</div>
+        <div class="foot">입고 전체 수량</div>
+      </article>
+      <article class="card">
+        <div class="label">잔여 수량</div>
+        <div class="value" id="remainingQty">0</div>
+        <div class="foot">현장 보유 잔량</div>
+      </article>
+      <article class="card">
+        <div class="label">미입고</div>
+        <div class="value" id="notReceivedQty">0</div>
+        <div class="foot">미입고 중량/수량</div>
+      </article>
+    </section>
+
+    <nav class="admin-tabs" role="tablist" aria-label="관리자 메뉴">
+      <button class="admin-tab" id="workerTab" type="button" role="tab" aria-selected="true" aria-controls="workerPanel" data-tab="workerPanel">작업자 등록</button>
+      <button class="admin-tab" id="materialCreateTab" type="button" role="tab" aria-selected="false" aria-controls="materialCreatePanel" data-tab="materialCreatePanel" tabindex="-1">자재 등록</button>
+      <button class="admin-tab" id="materialListTab" type="button" role="tab" aria-selected="false" aria-controls="materialListPanel" data-tab="materialListPanel" tabindex="-1">자재 목록</button>
+      <button class="admin-tab" id="workerRequestsTab" type="button" role="tab" aria-selected="false" aria-controls="workerRequestsPanel" data-tab="workerRequestsPanel" tabindex="-1">작업자 신청내역</button>
+    </nav>
+
+    <section id="workerPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="workerTab">
+      <h2 class="section-title">작업자 등록</h2>
+      <form id="workerForm">
+        <div class="field-grid">
+          <div class="field">
+            <label for="workerId">작업자 ID</label>
+            <input id="workerId" name="workerId" type="text" placeholder="예: worker01" required>
+          </div>
+          <div class="field">
+            <label for="workerName">작업자 이름</label>
+            <input id="workerName" name="workerName" type="text" placeholder="예: 홍길동" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="workerPassword">초기 비밀번호</label>
+          <input id="workerPassword" name="workerPassword" type="password" placeholder="초기 비밀번호 입력" required>
+        </div>
+
+        <div class="form-actions">
+          <button class="button primary" type="submit">작업자 등록</button>
+        </div>
+      </form>
+
+      <div style="margin-top: 18px;">
+        <h3 style="margin:0 0 10px; font-size:1rem;">등록된 작업자</h3>
+        <ul id="workerList" class="compact-list"></ul>
+      </div>
+    </section>
+
+    <section id="materialCreatePanel" class="panel tab-panel" role="tabpanel" aria-labelledby="materialCreateTab" hidden>
+        <h2 class="section-title">자재 등록</h2>
+        <form id="materialForm">
+          <div class="field">
+            <label for="materialName">자재명</label>
+            <input id="materialName" name="materialName" type="text" placeholder="예: Bolt, Pipe, Anchor" required>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="materialType">자재 타입</label>
+              <select id="materialType" name="materialType">
+                <option value="철재">철재</option>
+                <option value="비철금속">비철금속</option>
+                <option value="부속품">부속품</option>
+                <option value="전기">전기</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="status">상태</label>
+              <select id="status" name="status">
+                <option value="정상">정상</option>
+                <option value="입고대기">입고대기</option>
+                <option value="출고대기">출고대기</option>
+                <option value="지연">지연</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="receivedDate">입고일</label>
+              <input id="receivedDate" name="receivedDate" type="date">
+            </div>
+            <div class="field">
+              <label for="siteRequestDate">현장출고 신청일</label>
+              <input id="siteRequestDate" name="siteRequestDate" type="date">
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="requester">출고신청자</label>
+              <input id="requester" name="requester" type="text" placeholder="예: 김현장">
+            </div>
+            <div class="field">
+              <label for="siteReleaseDate">현장출고일</label>
+              <input id="siteReleaseDate" name="siteReleaseDate" type="date">
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="totalQtyInput">자재 전체 수량</label>
+              <input id="totalQtyInput" name="totalQty" type="number" min="0" step="1" value="0">
+            </div>
+            <div class="field">
+              <label for="remainingQtyInput">자재 잔여 수량</label>
+              <input id="remainingQtyInput" name="remainingQty" type="number" min="0" step="1" value="0">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="notReceivedQtyInput">미입고 수량</label>
+            <input id="notReceivedQtyInput" name="notReceivedQty" type="number" min="0" step="1" value="0">
+          </div>
+
+          <div class="form-actions">
+            <button class="button" id="cancelMaterialEditBtn" type="button" hidden>수정 취소</button>
+            <button class="button" id="resetMaterialFormBtn" type="reset">초기화</button>
+            <button class="button primary" id="saveMaterialBtn" type="submit">저장</button>
+          </div>
+        </form>
+    </section>
+
+    <section id="materialListPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="materialListTab" hidden>
+        <h2 class="section-title">자재 목록</h2>
+        <div class="toolbar">
+          <div class="search-box">
+            <input id="searchInput" type="search" placeholder="자재명, 타입, 신청자 검색">
+          </div>
+        </div>
+
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>자재명</th>
+                <th>타입</th>
+                <th>입고일</th>
+                <th>현장출고 신청일</th>
+                <th>출고신청자</th>
+                <th>현장출고일</th>
+                <th>전체수량</th>
+                <th>잔여수량</th>
+                <th>미입고수량</th>
+                <th>상태</th>
+                <th style="width:110px;">관리</th>
+              </tr>
+            </thead>
+            <tbody id="materialTableBody"></tbody>
+          </table>
+          <div class="empty" id="emptyState" hidden>등록된 자재가 없습니다.</div>
+        </div>
+    </section>
+
+    <section id="workerRequestsPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="workerRequestsTab" hidden>
+      <h2 class="section-title">작업자 자재 신청내역</h2>
+      <div class="table-shell">
+        <table class="admin-request-table">
+          <thead>
+            <tr>
+              <th>신청일</th>
+              <th>작업자</th>
+              <th>작업자 ID</th>
+              <th>자재명</th>
+              <th>타입</th>
+              <th>신청 수량</th>
+              <th>요청 사항</th>
+              <th>상태</th>
+              <th>승인 관리</th>
+            </tr>
+          </thead>
+          <tbody id="adminWorkerRequestTableBody"></tbody>
+        </table>
+        <div class="empty" id="adminWorkerRequestEmptyState">등록된 신청 내역이 없습니다.</div>
+      </div>
+    </section>
+  </div>
+
+  <div id="workerScreen" class="container" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <small>Field Operations</small>
+          <h1>현장 자재 관리</h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="workerUserBadge" class="tag" style="margin-right:8px; display:inline-flex;"></span>
+        <button class="button" id="logoutBtnWorker" type="button">로그아웃</button>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <article class="card">
+        <div class="label">총 자재</div>
+        <div class="value" id="workerTotalMaterials">0</div>
+        <div class="foot">등록된 자재 건수</div>
+      </article>
+      <article class="card">
+        <div class="label">총 수량</div>
+        <div class="value" id="workerTotalQty">0</div>
+        <div class="foot">입고 전체 수량</div>
+      </article>
+      <article class="card">
+        <div class="label">잔여 수량</div>
+        <div class="value" id="workerRemainingQty">0</div>
+        <div class="foot">현장 보유 잔량</div>
+      </article>
+      <article class="card">
+        <div class="label">미입고</div>
+        <div class="value" id="workerNotReceivedQty">0</div>
+        <div class="foot">미입고 중량/수량</div>
+      </article>
+    </section>
+
+    <nav class="worker-tabs admin-tabs" role="tablist" aria-label="작업자 메뉴">
+      <button class="admin-tab" id="passwordTab" type="button" role="tab" aria-selected="true" aria-controls="passwordPanel" data-tab="passwordPanel">비밀번호 변경</button>
+      <button class="admin-tab" id="requestTab" type="button" role="tab" aria-selected="false" aria-controls="requestPanel" data-tab="requestPanel" tabindex="-1">자재신청</button>
+      <button class="admin-tab" id="workerStatusTab" type="button" role="tab" aria-selected="false" aria-controls="workerStatusPanel" data-tab="workerStatusPanel" tabindex="-1">자재현황</button>
+    </nav>
+
+    <section id="passwordPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="passwordTab">
+      <h2 class="section-title">비밀번호 변경</h2>
+      <form id="passwordChangeForm">
+        <div class="field-grid">
+          <div class="field">
+            <label for="currentPassword">현재 비밀번호</label>
+            <input id="currentPassword" name="currentPassword" type="password" required>
+          </div>
+          <div class="field">
+            <label for="newPassword">새 비밀번호</label>
+            <input id="newPassword" name="newPassword" type="password" required>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="button primary" type="submit">비밀번호 변경</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="requestPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="requestTab" hidden>
+      <h2 class="section-title">자재신청</h2>
+      <form id="materialRequestForm">
+        <div class="field-grid">
+          <div class="field">
+            <label for="requestMaterialName">자재명</label>
+            <input id="requestMaterialName" name="materialName" type="text" placeholder="신청할 자재명" required>
+          </div>
+          <div class="field">
+            <label for="requestMaterialType">자재 타입</label>
+            <select id="requestMaterialType" name="materialType">
+              <option value="철재">철재</option>
+              <option value="비철금속">비철금속</option>
+              <option value="부속품">부속품</option>
+              <option value="전기">전기</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="requestQuantity">신청 수량</label>
+            <input id="requestQuantity" name="quantity" type="number" min="1" step="1" required>
+          </div>
+          <div class="field">
+            <label for="requestDate">신청일</label>
+            <input id="requestDate" name="requestDate" type="date" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="requestNote">요청 사항</label>
+          <input id="requestNote" name="note" type="text" placeholder="규격이나 전달사항 (선택)">
+        </div>
+
+        <div class="form-actions">
+          <button class="button primary" type="submit">자재 신청</button>
+        </div>
+      </form>
+
+      <div style="margin-top: 22px;">
+        <h3 style="margin:0 0 10px; font-size:1rem;">내 신청 내역</h3>
+        <div class="table-shell">
+          <table class="request-table">
+            <thead>
+              <tr>
+                <th>신청일</th>
+                <th>자재명</th>
+                <th>타입</th>
+                <th>수량</th>
+                <th>요청 사항</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody id="workerRequestTableBody"></tbody>
+          </table>
+          <div class="empty" id="workerRequestEmptyState">신청 내역이 없습니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workerStatusPanel" class="panel tab-panel" role="tabpanel" aria-labelledby="workerStatusTab" hidden>
+      <h2 class="section-title">자재 현황</h2>
+      <div class="toolbar">
+        <div class="search-box">
+          <input id="workerSearchInput" type="search" placeholder="자재명, 타입, 신청자 검색">
+        </div>
+      </div>
+
+      <div class="table-shell">
+        <table>
+          <thead>
+            <tr>
+              <th>자재명</th>
+              <th>타입</th>
+              <th>입고일</th>
+              <th>현장출고 신청일</th>
+              <th>출고신청자</th>
+              <th>현장출고일</th>
+              <th>전체수량</th>
+              <th>잔여수량</th>
+              <th>미입고수량</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody id="workerMaterialTableBody"></tbody>
+        </table>
+        <div class="empty" id="workerEmptyState" hidden>등록된 자재가 없습니다.</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const AUTH_KEY = 'field-materials-session';
+    const WORKER_KEY = 'field-materials-workers';
+    const REQUEST_KEY = 'field-materials-requests';
+    const ADMIN_ACCOUNT = { username: 'admin', password: 'admin123' };
+    const DB_NAME = 'field-materials-db';
+    const STORE_NAME = 'materials';
+    const API_BASE = 'http://127.0.0.1:8000';
+    const defaultMaterials = [
+      { id: 'm-1001', materialName: 'Bolt M16', materialType: '철재', receivedDate: '2026-10-01', siteRequestDate: '2026-10-03', requester: '김현장', siteReleaseDate: '2026-10-05', totalQty: 500, remainingQty: 420, notReceivedQty: 80, status: '정상' },
+      { id: 'm-1002', materialName: 'PVC Pipe', materialType: '부속품', receivedDate: '2026-10-02', siteRequestDate: '2026-10-04', requester: '박현장', siteReleaseDate: '', totalQty: 120, remainingQty: 90, notReceivedQty: 30, status: '출고대기' },
+      { id: 'm-1003', materialName: 'Anchor 50mm', materialType: '철재', receivedDate: '2026-09-30', siteRequestDate: '2026-10-02', requester: '이지원', siteReleaseDate: '2026-10-03', totalQty: 220, remainingQty: 180, notReceivedQty: 40, status: '지연' }
+    ];
+
+    const form = document.getElementById('materialForm');
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('materialTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const workerSearchInput = document.getElementById('workerSearchInput');
+    const workerTableBody = document.getElementById('workerMaterialTableBody');
+    const workerEmptyState = document.getElementById('workerEmptyState');
+    const adminScreen = document.getElementById('adminScreen');
+    const workerScreen = document.getElementById('workerScreen');
+    const workerUserBadge = document.getElementById('workerUserBadge');
+    const adminUserBadge = document.querySelector('.tag');
+
+    let db;
+    let currentUser = null;
+    let editingId = null;
+
+    function getWorkers() {
+      try {
+        return JSON.parse(localStorage.getItem(WORKER_KEY) || '[]');
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveWorkers(workers) {
+      localStorage.setItem(WORKER_KEY, JSON.stringify(workers));
+    }
+
+    function ensureDefaultWorkers() {
+      if (localStorage.getItem(WORKER_KEY) === null) {
+        saveWorkers([
+          { id: 'worker01', name: '홍길동', password: 'worker123' },
+          { id: 'worker02', name: '김현장', password: 'worker456' }
+        ]);
+      }
+    }
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem(AUTH_KEY);
+    }
+
+    function showScreen(screenName) {
+      adminScreen.hidden = screenName !== 'admin';
+      workerScreen.hidden = screenName !== 'worker';
+    }
+
+    function selectAdminTab(tab) {
+      const tabs = [...document.querySelectorAll('#adminScreen .admin-tab')];
+      tabs.forEach((item) => {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        document.getElementById(item.dataset.tab).hidden = !selected;
+      });
+      if (tab.dataset.tab === 'workerRequestsPanel') renderAdminWorkerRequests();
+    }
+
+    document.querySelector('#adminScreen .admin-tabs').addEventListener('click', (event) => {
+      const tab = event.target.closest('.admin-tab');
+      if (tab) selectAdminTab(tab);
+    });
+
+    document.querySelector('#adminScreen .admin-tabs').addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      const tabs = [...document.querySelectorAll('#adminScreen .admin-tab')];
+      const currentIndex = tabs.indexOf(event.target);
+      if (currentIndex < 0) return;
+
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextTab = tabs[(currentIndex + direction + tabs.length) % tabs.length];
+      selectAdminTab(nextTab);
+      nextTab.focus();
+    });
+
+    function selectWorkerTab(tab) {
+      const tabs = [...document.querySelectorAll('#workerScreen .admin-tab')];
+      tabs.forEach((item) => {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+        document.getElementById(item.dataset.tab).hidden = !selected;
+      });
+    }
+
+    document.querySelector('#workerScreen .worker-tabs').addEventListener('click', (event) => {
+      const tab = event.target.closest('.admin-tab');
+      if (tab) selectWorkerTab(tab);
+    });
+
+    document.querySelector('#workerScreen .worker-tabs').addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      const tabs = [...document.querySelectorAll('#workerScreen .admin-tab')];
+      const currentIndex = tabs.indexOf(event.target);
+      if (currentIndex < 0) return;
+
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextTab = tabs[(currentIndex + direction + tabs.length) % tabs.length];
+      selectWorkerTab(nextTab);
+      nextTab.focus();
+    });
+
+    function renderWorkerList() {
+      const list = document.getElementById('workerList');
+      const workers = getWorkers();
+      list.innerHTML = '';
+
+      if (!workers.length) {
+        const item = document.createElement('li');
+        item.textContent = '등록된 작업자가 없습니다.';
+        list.appendChild(item);
+        return;
+      }
+
+      workers.forEach((worker) => {
+        const li = document.createElement('li');
+        const info = document.createElement('span');
+        info.className = 'worker-info';
+        info.textContent = `${worker.name} (${worker.id})`;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'mini-btn delete';
+        deleteButton.dataset.workerId = worker.id;
+        deleteButton.textContent = '삭제';
+        deleteButton.setAttribute('aria-label', `${worker.name} 작업자 삭제`);
+
+        li.append(info, deleteButton);
+        list.appendChild(li);
+      });
+    }
+
+    function handleWorkerDelete(event) {
+      const button = event.target.closest('button[data-worker-id]');
+      if (!button) return;
+
+      const workerId = button.dataset.workerId;
+      const workers = getWorkers();
+      const worker = workers.find((entry) => entry.id === workerId);
+      if (!worker) {
+        renderWorkerList();
+        return;
+      }
+
+      if (!confirm(`${worker.name} (${worker.id}) 작업자를 삭제할까요?`)) return;
+
+      saveWorkers(workers.filter((entry) => entry.id !== workerId));
+      renderWorkerList();
+    }
+
+    function handleWorkerCreate(event) {
+      event.preventDefault();
+      const workerId = document.getElementById('workerId').value.trim();
+      const workerName = document.getElementById('workerName').value.trim();
+      const workerPassword = document.getElementById('workerPassword').value.trim();
+
+      if (!workerId || !workerName || !workerPassword) {
+        alert('작업자 ID, 이름, 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      const workers = getWorkers();
+      if (workers.some((worker) => worker.id === workerId)) {
+        alert('이미 등록된 작업자 ID입니다.');
+        return;
+      }
+
+      workers.push({ id: workerId, name: workerName, password: workerPassword });
+      saveWorkers(workers);
+      event.target.reset();
+      renderWorkerList();
+      alert('작업자가 등록되었습니다.');
+    }
+
+    function handlePasswordChange(event) {
+      event.preventDefault();
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value.trim();
+
+      if (!currentPassword || !newPassword) {
+        alert('현재 비밀번호와 새 비밀번호를 모두 입력해주세요.');
+        return;
+      }
+
+      const workers = getWorkers();
+      const targetIndex = workers.findIndex((worker) => worker.id === currentUser.id && worker.password === currentPassword);
+
+      if (targetIndex === -1) {
+        alert('현재 비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      workers[targetIndex].password = newPassword;
+      saveWorkers(workers);
+      event.target.reset();
+      alert('비밀번호가 변경되었습니다.');
+    }
+
+    function getWorkerRequests() {
+      const raw = localStorage.getItem(REQUEST_KEY);
+      if (!raw) return [];
+      const requests = JSON.parse(raw);
+      return Array.isArray(requests) ? requests : [];
+    }
+
+    function renderAdminWorkerRequests() {
+      const tableBody = document.getElementById('adminWorkerRequestTableBody');
+      const emptyState = document.getElementById('adminWorkerRequestEmptyState');
+      const requests = getWorkerRequests().sort((a, b) => b.createdAt - a.createdAt);
+      tableBody.replaceChildren();
+      emptyState.hidden = requests.length > 0;
+
+      requests.forEach((request) => {
+        const row = document.createElement('tr');
+        [
+          request.requestDate || '-',
+          request.requester || '-',
+          request.workerId || '-',
+          request.materialName || '-',
+          request.materialType || '-',
+          formatNumber(request.quantity),
+          request.note || '-'
+        ].forEach((value) => {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+
+        const statusCell = document.createElement('td');
+        const statusTag = document.createElement('span');
+        statusTag.className = `tag ${request.status === '승인' ? '' : request.status === '반려' ? 'danger' : 'warning'}`;
+        statusTag.textContent = request.status || '신청 접수';
+        statusCell.appendChild(statusTag);
+        row.appendChild(statusCell);
+
+        const actionCell = document.createElement('td');
+        if (!request.status || request.status === '신청 접수' || request.status === '검토중') {
+          const approveButton = document.createElement('button');
+          approveButton.type = 'button';
+          approveButton.className = 'mini-btn';
+          approveButton.dataset.requestAction = '승인';
+          approveButton.dataset.requestId = request.id;
+          approveButton.textContent = '승인';
+
+          const rejectButton = document.createElement('button');
+          rejectButton.type = 'button';
+          rejectButton.className = 'mini-btn delete';
+          rejectButton.dataset.requestAction = '반려';
+          rejectButton.dataset.requestId = request.id;
+          rejectButton.textContent = '반려';
+          actionCell.append(approveButton, rejectButton);
+        } else {
+          actionCell.textContent = '처리 완료';
+        }
+        row.appendChild(actionCell);
+        tableBody.appendChild(row);
+      });
+    }
+
+    function handleWorkerRequestDecision(event) {
+      const button = event.target.closest('button[data-request-action]');
+      if (!button) return;
+
+      const action = button.dataset.requestAction;
+      const requestId = button.dataset.requestId;
+      if (!requestId || (action !== '승인' && action !== '반려')) return;
+      if (action === '반려' && !confirm('이 자재 신청을 반려할까요?')) return;
+
+      const requests = getWorkerRequests();
+      const requestIndex = requests.findIndex((request) => request.id === requestId);
+      if (requestIndex === -1) {
+        alert('신청 내역을 찾을 수 없습니다. 목록을 새로고침합니다.');
+        renderAdminWorkerRequests();
+        return;
+      }
+
+      requests[requestIndex].status = action;
+      requests[requestIndex].reviewedAt = Date.now();
+      requests[requestIndex].reviewedBy = currentUser.id;
+      localStorage.setItem(REQUEST_KEY, JSON.stringify(requests));
+      renderAdminWorkerRequests();
+    }
+
+    function renderWorkerRequests() {
+      const requests = getWorkerRequests()
+        .filter((request) => request.workerId === currentUser.id)
+        .sort((a, b) => b.createdAt - a.createdAt);
+      const tableBody = document.getElementById('workerRequestTableBody');
+      const emptyState = document.getElementById('workerRequestEmptyState');
+      tableBody.replaceChildren();
+      emptyState.hidden = requests.length > 0;
+
+      requests.forEach((request) => {
+        const row = document.createElement('tr');
+        [
+          request.requestDate,
+          request.materialName,
+          request.materialType,
+          formatNumber(request.quantity),
+          request.note || '-',
+          request.status
+        ].forEach((value) => {
+          const cell = document.createElement('td');
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+        tableBody.appendChild(row);
+      });
+    }
+
+    function getTodayDate() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+    }
+
+    function handleMaterialRequest(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const materialName = String(formData.get('materialName') || '').trim();
+      const quantity = Number(formData.get('quantity'));
+      const requestDate = String(formData.get('requestDate') || '');
+
+      if (!materialName || !Number.isInteger(quantity) || quantity < 1 || !requestDate) {
+        alert('자재명, 신청 수량, 신청일을 올바르게 입력해주세요.');
+        return;
+      }
+
+      const requests = getWorkerRequests();
+      requests.push({
+        id: `r-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        workerId: currentUser.id,
+        requester: currentUser.name,
+        materialName,
+        materialType: String(formData.get('materialType') || '기타'),
+        quantity,
+        requestDate,
+        note: String(formData.get('note') || '').trim(),
+        status: '신청 접수',
+        createdAt: Date.now()
+      });
+      localStorage.setItem(REQUEST_KEY, JSON.stringify(requests));
+      form.reset();
+      document.getElementById('requestDate').value = getTodayDate();
+      renderWorkerRequests();
+      alert('자재 신청이 접수되었습니다.');
+    }
+
+    function handleLogout() {
+      clearSession();
+      window.location.href = 'index.html';
+    }
+
+    document.getElementById('logoutBtnAdmin').addEventListener('click', handleLogout);
+    document.getElementById('logoutBtnWorker').addEventListener('click', handleLogout);
+    document.getElementById('workerForm').addEventListener('submit', handleWorkerCreate);
+    document.getElementById('workerList').addEventListener('click', handleWorkerDelete);
+    document.getElementById('passwordChangeForm').addEventListener('submit', handlePasswordChange);
+    document.getElementById('materialRequestForm').addEventListener('submit', handleMaterialRequest);
+    document.getElementById('adminWorkerRequestTableBody').addEventListener('click', handleWorkerRequestDecision);
+    window.addEventListener('storage', (event) => {
+      if (event.key !== REQUEST_KEY) return;
+      if (currentUser?.role === 'admin') renderAdminWorkerRequests();
+      if (currentUser?.role === 'worker') renderWorkerRequests();
+    });
+
+    async function apiRequest(path, options = {}) {
+      const response = await fetch(`${API_BASE}${path}`, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || '서버 요청에 실패했습니다.');
+      }
+
+      const text = await response.text();
+      return text ? JSON.parse(text) : null;
+    }
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (event) => {
+          const database = event.target.result;
+          if (!database.objectStoreNames.contains(STORE_NAME)) {
+            const store = database.createObjectStore(STORE_NAME, { keyPath: 'id' });
+            store.createIndex('materialName', 'materialName', { unique: false });
+            store.createIndex('materialType', 'materialType', { unique: false });
+            store.createIndex('requester', 'requester', { unique: false });
+          }
+        };
+        request.onsuccess = () => {
+          db = request.result;
+          resolve();
+        };
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function getAllMaterialsFromIndexedDb() {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveMaterialToIndexedDb(material) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.put(material);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function deleteMaterialFromIndexedDb(id) {
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.delete(id);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function getAllMaterials() {
+      try {
+        return await apiRequest('/api/materials');
+      } catch (error) {
+        if (!db) await openDatabase();
+        return getAllMaterialsFromIndexedDb();
+      }
+    }
+
+    async function saveMaterial(material) {
+      try {
+        return await apiRequest('/api/materials', { method: 'POST', body: JSON.stringify(material) });
+      } catch (error) {
+        if (!db) await openDatabase();
+        return saveMaterialToIndexedDb(material);
+      }
+    }
+
+    async function deleteMaterial(id) {
+      try {
+        return await apiRequest(`/api/materials/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      } catch (error) {
+        if (!db) await openDatabase();
+        return deleteMaterialFromIndexedDb(id);
+      }
+    }
+
+    function formatNumber(value) {
+      const number = Number(value || 0);
+      return Number.isFinite(number) ? number.toLocaleString('ko-KR') : '0';
+    }
+
+    function getStatusClass(status) {
+      if (status === '지연') return 'danger';
+      if (status === '출고대기' || status === '입고대기') return 'warning';
+      return '';
+    }
+
+    function renderSummary(items, prefix = '') {
+      const totalMaterials = items.length;
+      const totalQty = items.reduce((sum, item) => sum + Number(item.totalQty || 0), 0);
+      const remainingQty = items.reduce((sum, item) => sum + Number(item.remainingQty || 0), 0);
+      const notReceivedQty = items.reduce((sum, item) => sum + Number(item.notReceivedQty || 0), 0);
+
+      const ids = prefix ? {
+        totalMaterials: `${prefix}TotalMaterials`,
+        totalQty: `${prefix}TotalQty`,
+        remainingQty: `${prefix}RemainingQty`,
+        notReceivedQty: `${prefix}NotReceivedQty`
+      } : {
+        totalMaterials: 'totalMaterials',
+        totalQty: 'totalQty',
+        remainingQty: 'remainingQty',
+        notReceivedQty: 'notReceivedQty'
+      };
+
+      document.getElementById(ids.totalMaterials).textContent = formatNumber(totalMaterials);
+      document.getElementById(ids.totalQty).textContent = formatNumber(totalQty);
+      document.getElementById(ids.remainingQty).textContent = formatNumber(remainingQty);
+      document.getElementById(ids.notReceivedQty).textContent = formatNumber(notReceivedQty);
+    }
+
+    function renderRows(items, targetBody, includeActions = false) {
+      targetBody.innerHTML = '';
+      if (!items.length) return;
+
+      items.forEach((item) => {
+        const actionHtml = includeActions ? `
+          <td>
+            <div class="status-actions">
+              <button class="mini-btn" type="button" data-action="edit" data-id="${item.id}">수정</button>
+              <button class="mini-btn delete" type="button" data-action="delete" data-id="${item.id}">삭제</button>
+            </div>
+          </td>
+        ` : '';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.materialName || '-'}</td>
+          <td>${item.materialType || '-'}</td>
+          <td>${item.receivedDate || '-'}</td>
+          <td>${item.siteRequestDate || '-'}</td>
+          <td>${item.requester || '-'}</td>
+          <td>${item.siteReleaseDate || '-'}</td>
+          <td>${formatNumber(item.totalQty)}</td>
+          <td>${formatNumber(item.remainingQty)}</td>
+          <td>${formatNumber(item.notReceivedQty)}</td>
+          <td><span class="tag ${getStatusClass(item.status)}">${item.status || '정상'}</span></td>
+          ${actionHtml}
+        `;
+        targetBody.appendChild(row);
+      });
+    }
+
+    async function refreshList() {
+      const adminSearch = searchInput.value.trim().toLowerCase();
+      const workerSearch = workerSearchInput.value.trim().toLowerCase();
+      const allItems = await getAllMaterials();
+
+      const adminItems = adminSearch
+        ? allItems.filter((item) => {
+            const haystack = [item.materialName, item.materialType, item.requester, item.status].join(' ').toLowerCase();
+            return haystack.includes(adminSearch);
+          })
+        : allItems;
+
+      const workerItems = workerSearch
+        ? allItems.filter((item) => {
+            const haystack = [item.materialName, item.materialType, item.requester, item.status].join(' ').toLowerCase();
+            return haystack.includes(workerSearch);
+          })
+        : allItems;
+
+      adminItems.sort((a, b) => (a.materialName || '').localeCompare(b.materialName || '', 'ko'));
+      workerItems.sort((a, b) => (a.materialName || '').localeCompare(b.materialName || '', 'ko'));
+
+      emptyState.hidden = adminItems.length > 0;
+      workerEmptyState.hidden = workerItems.length > 0;
+      renderRows(adminItems, tableBody, true);
+      renderRows(workerItems, workerTableBody, false);
+      renderSummary(adminItems);
+      renderSummary(workerItems, 'worker');
+    }
+
+    function resetForm() {
+      form.reset();
+      editingId = null;
+      document.getElementById('saveMaterialBtn').textContent = '저장';
+      document.getElementById('cancelMaterialEditBtn').hidden = true;
+      document.getElementById('resetMaterialFormBtn').hidden = false;
+      document.getElementById('materialType').value = '철재';
+      document.getElementById('status').value = '정상';
+      document.getElementById('totalQtyInput').value = 0;
+      document.getElementById('remainingQtyInput').value = 0;
+      document.getElementById('notReceivedQtyInput').value = 0;
+    }
+
+    function fillForm(item) {
+      editingId = item.id;
+      document.getElementById('saveMaterialBtn').textContent = '변경사항 저장';
+      document.getElementById('cancelMaterialEditBtn').hidden = false;
+      document.getElementById('resetMaterialFormBtn').hidden = true;
+      document.getElementById('materialName').value = item.materialName || '';
+      document.getElementById('materialType').value = item.materialType || '철재';
+      document.getElementById('status').value = item.status || '정상';
+      document.getElementById('receivedDate').value = item.receivedDate || '';
+      document.getElementById('siteRequestDate').value = item.siteRequestDate || '';
+      document.getElementById('requester').value = item.requester || '';
+      document.getElementById('siteReleaseDate').value = item.siteReleaseDate || '';
+      document.getElementById('totalQtyInput').value = item.totalQty || 0;
+      document.getElementById('remainingQtyInput').value = item.remainingQty || 0;
+      document.getElementById('notReceivedQtyInput').value = item.notReceivedQty || 0;
+      document.getElementById('materialName').focus();
+    }
+
+    document.getElementById('cancelMaterialEditBtn').addEventListener('click', resetForm);
+
+    function normalizeMaterial(payload) {
+      const materialName = String(payload.materialName || '').trim();
+      if (!materialName) throw new Error('자재명은 필수입니다.');
+
+      return {
+        id: payload.id || `m-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+        materialName,
+        materialType: String(payload.materialType || '철재'),
+        receivedDate: String(payload.receivedDate || ''),
+        siteRequestDate: String(payload.siteRequestDate || ''),
+        requester: String(payload.requester || '').trim(),
+        siteReleaseDate: String(payload.siteReleaseDate || ''),
+        totalQty: Number(payload.totalQty || 0),
+        remainingQty: Number(payload.remainingQty || 0),
+        notReceivedQty: Number(payload.notReceivedQty || 0),
+        status: String(payload.status || '정상')
+      };
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      try {
+        const payload = normalizeMaterial({
+          id: editingId,
+          materialName: form.materialName.value,
+          materialType: form.materialType.value,
+          receivedDate: form.receivedDate.value,
+          siteRequestDate: form.siteRequestDate.value,
+          requester: form.requester.value,
+          siteReleaseDate: form.siteReleaseDate.value,
+          totalQty: form.totalQty.value,
+          remainingQty: form.remainingQty.value,
+          notReceivedQty: form.notReceivedQty.value,
+          status: form.status.value
+        });
+        const wasEditing = Boolean(editingId);
+        await saveMaterial(payload);
+        resetForm();
+        await refreshList();
+        if (wasEditing) {
+          document.getElementById('materialListTab').click();
+          alert('자재 정보가 수정되었습니다.');
+        }
+      } catch (error) {
+        alert(error.message || '저장에 실패했습니다.');
+      }
+    });
+
+    tableBody.addEventListener('click', async (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      const action = button.dataset.action;
+      const id = button.dataset.id;
+      if (!id) return;
+
+      const items = await getAllMaterials();
+      const item = items.find((entry) => String(entry.id) === String(id));
+
+      if (action === 'edit' && item) {
+        fillForm(item);
+        document.getElementById('materialCreateTab').click();
+      }
+
+      if (action === 'delete') {
+        if (!confirm('이 자재를 삭제할까요?')) return;
+        try {
+          await deleteMaterial(id);
+          if (editingId === id) resetForm();
+          await refreshList();
+        } catch (error) {
+          alert(error.message || '삭제에 실패했습니다.');
+        }
+      }
+    });
+
+    searchInput.addEventListener('input', () => refreshList().catch((error) => alert(error.message)));
+    workerSearchInput.addEventListener('input', () => refreshList().catch((error) => alert(error.message)));
+
+    form.addEventListener('reset', () => {
+      setTimeout(() => {
+        editingId = null;
+        document.getElementById('materialType').value = '철재';
+        document.getElementById('status').value = '정상';
+        document.getElementById('totalQtyInput').value = 0;
+        document.getElementById('remainingQtyInput').value = 0;
+        document.getElementById('notReceivedQtyInput').value = 0;
+      }, 0);
+    });
+
+    document.getElementById('resetDemoBtn').addEventListener('click', async () => {
+      try {
+        if (!db) await openDatabase();
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.clear();
+        defaultMaterials.forEach((item) => store.put(item));
+        await new Promise((resolve, reject) => {
+          transaction.oncomplete = resolve;
+          transaction.onerror = () => reject(transaction.error);
+        });
+        try {
+          await apiRequest('/api/reset-demo', { method: 'POST' });
+        } catch (error) {
+          // 서버가 없거나 연결되지 않아도 IndexedDB fallback으로 계속 동작합니다.
+        }
+        resetForm();
+        await refreshList();
+      } catch (error) {
+        alert(error.message || '샘플 데이터를 불러오지 못했습니다.');
+      }
+    });
+
+    async function init() {
+      const session = getSession();
+      if (!session || (session.role !== 'admin' && session.role !== 'worker')) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentUser = session;
+      ensureDefaultWorkers();
+      renderWorkerList();
+      if (currentUser.role === 'admin') {
+        showScreen('admin');
+      } else {
+        workerUserBadge.textContent = `작업자: ${currentUser.name}`;
+        document.getElementById('requestDate').value = getTodayDate();
+        renderWorkerRequests();
+        showScreen('worker');
+      }
+
+      if (window.indexedDB) await openDatabase();
+      const existing = await getAllMaterials();
+      if (!existing.length && db) {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        defaultMaterials.forEach((item) => store.put(item));
+        await new Promise((resolve, reject) => {
+          transaction.oncomplete = resolve;
+          transaction.onerror = () => reject(transaction.error);
+        });
+      }
+
+      await refreshList();
+    }
+
+    init().catch((error) => {
+      console.error(error);
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
