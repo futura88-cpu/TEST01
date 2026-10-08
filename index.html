@@ -13,7 +13,7 @@
   <style>
     :root{color-scheme:light;--paper:#f3f4ef;--white:#fff;--ink:#202722;--muted:#737b73;--line:#dfe3db;--green:#176b52;--green-soft:#e5f1e9;--orange:#d96d45;--orange-soft:#fbede5;--yellow:#e7b840;--blue:#7296a8;--shadow:0 1px 2px #2027220d,0 8px 24px #20272208}
     *{box-sizing:border-box}body{margin:0;background-color:var(--paper);background-image:linear-gradient(#e7eae333 1px,transparent 1px),linear-gradient(90deg,#e7eae333 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:Manrope,"Noto Sans KR",sans-serif;font-size:14px}button,input,select{font:inherit}button,select{color:inherit}.shell{max-width:1480px;margin:0 auto;padding:30px 34px 48px}.masthead{display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:1px solid var(--line);padding:0 0 20px}.brandline{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;width:38px;height:38px;background:var(--green);color:#fff;font:500 14px "DM Mono",monospace;letter-spacing:0}.eyebrow{font:500 10px "DM Mono",monospace;letter-spacing:1.1px;color:var(--green);text-transform:uppercase}.heading{margin:4px 0 0;font-size:21px;font-weight:800;letter-spacing:0}.head-actions{display:flex;align-items:center;gap:12px}.source{font-size:12px;color:var(--muted)}.upload{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;font-size:12px;font-weight:700;transition:background .15s}.upload:hover{background:var(--green);border-color:var(--green)}.upload input{display:none}.intro{display:flex;align-items:end;justify-content:space-between;gap:20px;padding:25px 0 17px}.intro h2{margin:0;font-size:19px;font-weight:800;letter-spacing:0}.intro p{margin:5px 0 0;color:var(--muted);font-size:12px}.snapshot{color:var(--muted);font-size:11px}.snapshot strong{color:var(--ink);font-family:"DM Mono",monospace;font-weight:500}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.kpi{position:relative;min-height:112px;padding:16px 18px;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.kpi:before{position:absolute;inset:0 auto 0 0;width:3px;background:var(--green);content:""}.kpi:nth-child(2):before{background:var(--orange)}.kpi:nth-child(3):before{background:var(--yellow)}.kpi:nth-child(4):before{background:var(--blue)}.kpi-label{font-size:11px;color:var(--muted);font-weight:600}.kpi-value{margin-top:10px;font:500 27px "DM Mono","Noto Sans KR",monospace;letter-spacing:0;font-variant-numeric:tabular-nums}.kpi-foot{margin-top:5px;color:var(--muted);font-size:11px}.positive{color:var(--green)}.warning{color:var(--orange)}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,1fr);gap:14px;margin-top:14px}.panel{min-width:0;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow)}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:16px 18px 10px}.panel-title{margin:0;font-size:13px;font-weight:800}.panel-sub{margin:4px 0 0;font-size:11px;color:var(--muted)}.chart-wrap{height:260px;padding:7px 16px 16px}.chart-wrap.compact{height:260px}.filterbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}.control{height:35px;min-width:145px;padding:0 10px;border:1px solid var(--line);background:#fff;border-radius:0;font-size:12px}.control:focus{outline:2px solid #176b5233;border-color:var(--green)}.search{flex:1;min-width:180px}.result-count{margin-left:auto;color:var(--muted);font-size:11px;font-family:"DM Mono",monospace}.table-shell{overflow:auto;max-height:490px}.data-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}.data-table th{position:sticky;top:0;z-index:1;padding:10px 12px;background:#f7f8f5;color:var(--muted);font-size:10px;font-weight:700;text-align:left;border-bottom:1px solid var(--line)}.data-table td{padding:9px 12px;border-bottom:1px solid #edf0ea}.data-table tbody tr:hover{background:#f6f8f5}.data-table .num{text-align:right;font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}.tag{display:inline-block;padding:3px 7px;background:var(--green-soft);color:var(--green);font-size:10px;font-weight:700}.empty{padding:40px 16px;text-align:center;color:var(--muted)}.table-footer{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;color:var(--muted);font-size:11px}.pager{display:flex;gap:6px}.pager button{width:30px;height:28px;border:1px solid var(--line);background:#fff;cursor:pointer}.pager button:disabled{opacity:.4;cursor:default}.status{min-height:18px;margin-top:10px;color:var(--muted);font-size:11px}.status.error{color:#a33d29}.footnote{padding-top:13px;color:var(--muted);font-size:10px;line-height:1.6}.mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}
-    .uninstalled-totals{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.uninstalled-total{display:grid;gap:2px;color:var(--muted);font-size:10px}.uninstalled-total strong{color:var(--ink);font:500 21px "DM Mono",monospace;font-variant-numeric:tabular-nums}.uninstalled-total.excluded strong{color:var(--green)}
+    .uninstalled-totals{display:flex;align-items:center;gap:18px;flex-wrap:wrap}.uninstalled-total{display:grid;gap:2px;color:var(--muted);font-size:10px}.uninstalled-total strong{color:var(--ink);font:500 21px "DM Mono",monospace;font-variant-numeric:tabular-nums}
     @media(max-width:900px){.shell{padding:22px 20px 36px}.dashboard-grid{grid-template-columns:1fr}.chart-wrap,.chart-wrap.compact{height:240px}}
     @media(max-width:620px){.shell{padding:16px 12px 26px}.masthead{align-items:flex-start}.head-actions{align-items:flex-end;flex-direction:column-reverse;gap:6px}.source{max-width:160px;text-align:right;font-size:10px}.heading{font-size:17px}.intro{align-items:flex-start;flex-direction:column;gap:8px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{min-height:100px;padding:13px}.kpi-value{font-size:22px}.dashboard-grid{gap:10px;margin-top:10px}.panel-head{padding:14px 13px 8px}.filterbar{padding:11px;gap:7px}.control{min-width:calc(50% - 4px);flex:1}.search{min-width:100%;order:3}.result-count{margin:2px 0 0 auto}.chart-wrap,.chart-wrap.compact{height:220px;padding:6px 8px 12px}.table-footer{padding:9px 10px}}
     .upload:disabled{opacity:.45;cursor:not-allowed}
@@ -45,8 +45,8 @@
       <div class="table-footer"><span id="pageSummary">-</span><div class="pager"><button id="prevPage" type="button" aria-label="이전 페이지">‹</button><button id="nextPage" type="button" aria-label="다음 페이지">›</button></div></div>
     </section>
     <section class="panel uninstalled-panel" aria-label="미설치 물량">
-      <div class="panel-head uninstalled-head"><div><h3 class="panel-title">미설치 물량</h3><p class="panel-sub">원본 요약 시트 기준 · 미설치 수량이 있는 구분</p></div><div class="uninstalled-totals"><div class="uninstalled-total"><span>미설치</span><strong id="uninstalledTotal">-</strong></div><div class="uninstalled-total"><span>작업대기</span><strong id="workWaitTotal">-</strong></div><div class="uninstalled-total excluded"><span>작업대기 제외 미설치</span><strong id="uninstalledAdjustedTotal">-</strong></div></div></div>
-      <div class="table-shell"><table class="data-table"><thead><tr><th>구분</th><th class="num">전체 물량</th><th class="num">설치 완료</th><th class="num">미설치</th><th class="num">작업대기</th><th class="num">작업대기 제외 미설치</th><th class="num">설치율</th></tr></thead><tbody id="uninstalledBody"></tbody><tfoot id="uninstalledFoot"></tfoot></table><div class="empty" id="uninstalledEmpty" hidden>요약 시트에서 미설치 집계를 찾을 수 없습니다.</div></div>
+      <div class="panel-head uninstalled-head"><div><h3 class="panel-title">미설치 물량</h3><p class="panel-sub">원본 요약 시트 기준 · 미설치 수량이 있는 구분</p></div><div class="uninstalled-totals"><div class="uninstalled-total"><span>미설치</span><strong id="uninstalledTotal">-</strong></div></div></div>
+      <div class="table-shell"><table class="data-table"><thead><tr><th>구분</th><th class="num">전체 물량</th><th class="num">설치 완료</th><th class="num">미설치</th><th class="num">설치율</th></tr></thead><tbody id="uninstalledBody"></tbody><tfoot id="uninstalledFoot"></tfoot></table><div class="empty" id="uninstalledEmpty" hidden>요약 시트에서 미설치 집계를 찾을 수 없습니다.</div></div>
     </section>
     <div class="status" id="status" role="status"></div>
     <footer class="footnote">설치·용접 집계는 워크북의 요약 시트 값을 사용합니다. 필터 적용 시 날짜 입력 건수로 표시되며 설치 수량 집계와는 다를 수 있습니다.</footer>
@@ -91,7 +91,7 @@
     return {
       serial: text(cell(row, 0)), area: text(cell(row, 1)),
       iso: text(cell(row, 4)), group: text(cell(row, 8)), matType: text(cell(row, 13)), position: text(cell(row, 14)), joint: text(cell(row, 9)),
-      fitup: latestDate(cell(row, 10)), welding: dateText(cell(row, 11)), workWait: text(cell(row, 16)) === '작업대기',
+      fitup: latestDate(cell(row, 10)), welding: dateText(cell(row, 11)),
       weight: numeric(cell(row, 19)), all: row.map(text).join(' ').toLocaleLowerCase('ko-KR')
     };
   }
@@ -107,11 +107,9 @@
     state.categories = reportRows.filter((row) => text(row[0]) && text(row[0]).toUpperCase() !== 'TOTAL' && Number.isFinite(numeric(row[1])) && numeric(row[1]) > 0)
       .map((row) => {
         const name = text(row[0]);
-        const workWait = state.records.filter((record) => record.group === name && record.workWait).length;
-        return { name, total: numeric(row[1]), installed: numeric(row[2]), notInstalled: numeric(row[3]), workWait, notInstalledExcludingWait: Math.max(0, numeric(row[3]) - workWait), welded: numeric(row[4]), notWelded: numeric(row[5]) };
+        return { name, total: numeric(row[1]), installed: numeric(row[2]), notInstalled: numeric(row[3]), welded: numeric(row[4]), notWelded: numeric(row[5]) };
       });
-    const workWaitTotal = state.records.filter((record) => record.workWait).length;
-    state.summary = totalRow ? { total: numeric(totalRow[1]), installed: numeric(totalRow[2]), notInstalled: numeric(totalRow[3]), workWait: workWaitTotal, notInstalledExcludingWait: Math.max(0, numeric(totalRow[3]) - workWaitTotal), welded: numeric(totalRow[4]), notWelded: numeric(totalRow[5]), title: text(reportRows[0]?.[0]) } : null;
+    state.summary = totalRow ? { total: numeric(totalRow[1]), installed: numeric(totalRow[2]), notInstalled: numeric(totalRow[3]), welded: numeric(totalRow[4]), notWelded: numeric(totalRow[5]), title: text(reportRows[0]?.[0]) } : null;
     state.filename = filename;
     byId('exportButton').disabled = false;
     byId('sourceName').textContent = filename;
@@ -153,10 +151,10 @@
     ];
     const categories = state.categories.filter((category) => category.notInstalled > 0).sort((a, b) => b.notInstalled - a.notInstalled);
     const uninstalled = [
-      ['구분', '전체 물량', '설치 완료', '미설치', '작업대기', '작업대기 제외 미설치', '설치율'],
-      ...categories.map((category) => [category.name, category.total, category.installed, category.notInstalled, category.workWait, category.notInstalledExcludingWait, category.total ? `${(category.installed / category.total * 100).toFixed(1)}%` : '-'])
+      ['구분', '전체 물량', '설치 완료', '미설치', '설치율'],
+      ...categories.map((category) => [category.name, category.total, category.installed, category.notInstalled, category.total ? `${(category.installed / category.total * 100).toFixed(1)}%` : '-'])
     ];
-    if (state.summary) uninstalled.push(['TOTAL', state.summary.total, state.summary.installed, state.summary.notInstalled, state.summary.workWait, state.summary.notInstalledExcludingWait, `${(state.summary.installed / state.summary.total * 100).toFixed(1)}%`]);
+    if (state.summary) uninstalled.push(['TOTAL', state.summary.total, state.summary.installed, state.summary.notInstalled, `${(state.summary.installed / state.summary.total * 100).toFixed(1)}%`]);
     const summary = [
       ['항목', '값'],
       ['요약 기준', state.summary?.title || '-'],
@@ -167,8 +165,6 @@
       ['전체 물량 (요약)', state.summary?.total ?? state.records.length],
       ['설치 완료 (요약)', state.summary?.installed ?? '-'],
       ['미설치 물량 (요약)', state.summary?.notInstalled ?? '-'],
-      ['작업대기', state.summary?.workWait ?? '-'],
-      ['작업대기 제외 미설치', state.summary?.notInstalledExcludingWait ?? '-'],
       ['용접 완료 (요약)', state.summary?.welded ?? '-'],
       ['미용접 물량 (요약)', state.summary?.notWelded ?? '-'],
       ['필터 상세 중량 (KG)', records.reduce((total, record) => total + record.weight, 0)]
@@ -179,7 +175,7 @@
     const detailSheet = XLSX.utils.aoa_to_sheet(details);
     detailSheet['!cols'] = [18, 14, 42, 18, 24, 12, 14, 14, 16].map((wch) => ({ wch }));
     const uninstalledSheet = XLSX.utils.aoa_to_sheet(uninstalled);
-    uninstalledSheet['!cols'] = [20, 14, 14, 14, 14, 24, 12].map((wch) => ({ wch }));
+    uninstalledSheet['!cols'] = [20, 14, 14, 12].map((wch) => ({ wch }));
     XLSX.utils.book_append_sheet(workbook, summarySheet, '요약');
     XLSX.utils.book_append_sheet(workbook, detailSheet, '상세 물량');
     XLSX.utils.book_append_sheet(workbook, uninstalledSheet, '미설치 물량');
@@ -277,15 +273,13 @@
     body.replaceChildren();
     foot.replaceChildren();
     byId('uninstalledTotal').textContent = format(state.summary?.notInstalled);
-    byId('workWaitTotal').textContent = format(state.summary?.workWait);
-    byId('uninstalledAdjustedTotal').textContent = format(state.summary?.notInstalledExcludingWait);
     byId('uninstalledEmpty').hidden = categories.length > 0;
     categories.forEach((category) => {
       const row = document.createElement('tr');
       const label = document.createElement('td');
       label.textContent = category.name;
       row.append(label);
-      [category.total, category.installed, category.notInstalled, category.workWait, category.notInstalledExcludingWait].forEach((value) => {
+      [category.total, category.installed, category.notInstalled].forEach((value) => {
         const td = document.createElement('td');
         td.className = 'num';
         td.textContent = format(value);
@@ -302,7 +296,7 @@
       const label = document.createElement('td');
       label.textContent = 'TOTAL';
       row.append(label);
-      [state.summary.total, state.summary.installed, state.summary.notInstalled, state.summary.workWait, state.summary.notInstalledExcludingWait].forEach((value) => {
+      [state.summary.total, state.summary.installed, state.summary.notInstalled].forEach((value) => {
         const td = document.createElement('td');
         td.className = 'num';
         td.textContent = format(value);
